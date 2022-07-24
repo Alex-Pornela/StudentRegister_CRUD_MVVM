@@ -21,6 +21,6 @@ interface StudentDao {
 
     //write sql query
     @Query("SELECT * FROM student_data_table")
-    //define query function to get yhe list of save student data from the database as live data
+    //define query function to get the list of save student data from the database as live data
     fun getAllStudent():LiveData<List<Student>>
 }
