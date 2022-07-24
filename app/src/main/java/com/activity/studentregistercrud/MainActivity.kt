@@ -11,12 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.activity.studentregistercrud.DB.Student
 import com.activity.studentregistercrud.DB.StudentDatabase
+import com.activity.studentregistercrud.databinding.ActivityMainBinding
 
  class MainActivity : AppCompatActivity() {
-    private lateinit var nameEditText: EditText
-    private lateinit var emailEditText: EditText
-    private lateinit var saveButton: Button
-    private lateinit var clearButton: Button
+     //viewBinding
+     private lateinit var binding: ActivityMainBinding
 
     private lateinit var  viewModel: StudentViewModel
     // define reference variable for the recycleView and its adapter
@@ -29,12 +28,11 @@ import com.activity.studentregistercrud.DB.StudentDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //viewBinding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        nameEditText = findViewById(R.id.etName)
-        emailEditText = findViewById(R.id.etEmail)
-        saveButton = findViewById(R.id.btnSave)
-        clearButton = findViewById(R.id.btnClear)
         studentRecycleViewAdapter = findViewById(R.id.rvStudent)
 
         //create data access object
@@ -45,7 +43,7 @@ import com.activity.studentregistercrud.DB.StudentDatabase
         viewModel = ViewModelProvider(this,factory).get(StudentViewModel::class.java)
 
 
-        saveButton.setOnClickListener {
+        binding.btnSave.setOnClickListener {
             if(isListItemClicked){
                 updateStudentData()
                 clearInput()
@@ -55,7 +53,7 @@ import com.activity.studentregistercrud.DB.StudentDatabase
             }
 
         }
-        clearButton.setOnClickListener {
+        binding.btnClear.setOnClickListener {
             if(isListItemClicked){
                 deleteStudenData()
                 clearInput()
@@ -80,51 +78,63 @@ import com.activity.studentregistercrud.DB.StudentDatabase
          viewModel.insertStudent(student)
          */
          //best way
-         viewModel.insertStudent(
-             Student(
-                 0,
-                 nameEditText.text.toString(),
-                 emailEditText.text.toString()
+         binding.apply {
+             viewModel.insertStudent(
+                 Student(
+                     0,
+                     etName.text.toString(),
+                     etEmail.text.toString()
 
-         )
-         )
+                 )
+             )
+         }
+
      }
 
      private fun updateStudentData(){
-         viewModel.updateStudent(
-             //create and pass updated student object using the primary key which is id
-             Student(
-                 selectedStudent.id,
-                 nameEditText.text.toString(),
-                 emailEditText.text.toString()
+         binding.apply {
+             viewModel.updateStudent(
+                 //create and pass updated student object using the primary key which is id
+                 Student(
+                     selectedStudent.id,
+                     etName.text.toString(),
+                     etEmail.text.toString()
 
+                 )
              )
-         )
-         //after updating we need to take the screen back to default state
-         saveButton.text = "Save"
-         clearButton.text = "Clear"
-         //set to boolean isListItemClicked to true
-         isListItemClicked = false
+             //after updating we need to take the screen back to default state
+             btnSave.text = "Save"
+             btnClear.text = "Clear"
+             //set to boolean isListItemClicked to true
+             isListItemClicked = false
+         }
+
      }
 
      private fun deleteStudenData(){
-         viewModel.deleteStudent(
-             Student(
-                 selectedStudent.id,
-                 nameEditText.text.toString(),
-                 emailEditText.text.toString()
+         binding.apply {
+             viewModel.deleteStudent(
+                 Student(
+                     selectedStudent.id,
+                     etName.text.toString(),
+                     etEmail.text.toString()
+                 )
              )
-         )
-         //after updating we need to take the screen back to default state
-         saveButton.text = "Save"
-         clearButton.text = "Clear"
-         //set to boolean isListItemClicked to true
-         isListItemClicked = false
+             //after updating we need to take the screen back to default state
+             btnSave.text = "Save"
+             btnClear.text = "Clear"
+             //set to boolean isListItemClicked to true
+             isListItemClicked = false
+         }
+
      }
 
      private fun clearInput(){
-         nameEditText.setText("")
-         emailEditText.setText("")
+         binding.apply {
+             etName.setText("")
+            etEmail.setText("")
+         }
+
      }
 
      //displaying the list through recycleView
@@ -156,17 +166,20 @@ import com.activity.studentregistercrud.DB.StudentDatabase
 
      //function for click event in list_item
      private fun listItemClicked(student: Student){
-         /*Toast.makeText(this,"Student name is ${student.name}",
-         Toast.LENGTH_LONG
-         ).show()*/
-         //assign selected student object to it and change button text to Update and Delete
-         selectedStudent = student
-         saveButton.text = "Update"
-         clearButton.text = "Delete"
-         //set to boolean isListItemClicked to true
-         isListItemClicked = true
-         //display selected students name and email on the text input fields
-         nameEditText.setText(selectedStudent.name)
-         emailEditText.setText(selectedStudent.email)
+         binding.apply {
+             /*Toast.makeText(this,"Student name is ${student.name}",
+        Toast.LENGTH_LONG
+        ).show()*/
+             //assign selected student object to it and change button text to Update and Delete
+             selectedStudent = student
+             btnSave.text = "Update"
+             btnClear.text = "Delete"
+             //set to boolean isListItemClicked to true
+             isListItemClicked = true
+             //display selected students name and email on the text input fields
+             etName.setText(selectedStudent.name)
+             etEmail.setText(selectedStudent.email)
+         }
+
      }
 }
