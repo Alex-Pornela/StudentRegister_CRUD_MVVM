@@ -13,7 +13,6 @@ import com.activity.studentregistercrud.databinding.ListItemBinding
 class StudentRecycleViewAdapter(
     private val clickListener: (Student) -> Unit):RecyclerView.Adapter<StudentViewHolder>(){
     private val studentList = ArrayList<Student>()
-    private lateinit var binding: ListItemBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
        /* //create layout inflater
